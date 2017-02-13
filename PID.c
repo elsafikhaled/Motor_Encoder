@@ -14,7 +14,7 @@ volatile  U16_t Minutes=0,secs_overFlow=0,seconds=0;
 volatile  U16_t actualRPM=0;
 int main(void){
 	/*system data types */
-	DDRD|=(1<<PD4);             // enable pin D3 for PWM
+	DDRD|=(1<<PD4);             // enable pin D4 for PWM
 	DDRC|=(1<<PC0)|(1<<PC1);   // motor direction control
 	PORTC|=(1<<PC0);
 	PORTC&=~(1<<PC1);
