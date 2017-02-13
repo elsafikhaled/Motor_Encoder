@@ -14,7 +14,7 @@ volatile  U16_t Minutes=0,secs_overFlow=0,seconds=0;
 volatile  U16_t actualRPM=0;
 int main(void){
 	/*system data types */
-	DDRD|=(1<<PD4);             // enable pin B3 for PWM
+	DDRD|=(1<<PD4);             // enable pin D3 for PWM
 	DDRC|=(1<<PC0)|(1<<PC1);   // motor direction control
 	PORTC|=(1<<PC0);
 	PORTC&=~(1<<PC1);
@@ -55,7 +55,7 @@ ISR(INT1_vect){
 // timer overflow interrupt to calculate 1 seconde
 ISR(TIMER0_OVF_vect){
 	secs_overFlow++;
-	 if(secs_overFlow>=31){  // 1 seconde passed .. 1 tick=64 usec (1 sec =61 overflow) so (1 minute =61*60 overflow)
+	 if(secs_overFlow>=31){  // 1 seconde passed .. 1 tick=32 usec (1 sec =61 overflow)
 	   secs_overFlow=0;
 	   TCNT0=0;
        revolution=revolution*60;
