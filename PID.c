@@ -55,7 +55,7 @@ ISR(INT1_vect){
 // timer overflow interrupt to calculate 1 seconde
 ISR(TIMER0_OVF_vect){
 	secs_overFlow++;
-	 if(secs_overFlow>=31){  // 1 seconde passed .. 1 tick=32 usec (1 sec =61 overflow)
+	 if(secs_overFlow>=31){  // 1 seconde passed .. 1 tick=32 usec (1 sec =31 overflow)
 	   secs_overFlow=0;
 	   TCNT0=0;
        revolution=revolution*60;
