@@ -12,6 +12,18 @@
 volatile  U16_t revolution=0,revolution_overFlow=0;  // make compiler not optimize revolution and save it
 volatile  U16_t Minutes=0,secs_overFlow=0,seconds=0;
 volatile  U16_t actualRPM=0;
+//PID System
+struct PID{
+    U8_t pwm_val;
+    U8_t error;
+    U16_t E;
+    float Kp;
+    float Ki;
+    float Kd;
+    U8_t error_old;
+};
+struct PID PID_ctr={0,0,0,4.7,18.2,4.4,0};
+
 int main(void){
 	/*system data types */
 	DDRD|=(1<<PD4);             // enable pin D4 for PWM
@@ -27,13 +39,16 @@ int main(void){
     PWM1_EKE_start();
 
 	while(1){
-
+		      PID_ctr.error=360-actualRPM;                  //proportional part .. calculate error
+		      PID_ctr.E+=PID_ctr.error;                     // intergral part
+		      if(PID_ctr.E>=360)PID_ctr.E=360;
+		      PID_ctr.pwm_val=(PID_ctr.Kp*PID_ctr.error)+(PID_ctr.Ki*PID_ctr.E) + PID_ctr.Kd*(PID_ctr.error-PID_ctr.error_old);
 
 		      goToRowColumn(1,1);EKE_LCD_string((U8_t*)"MOTOR SPEED ");
               goToRowColumn(2,1);EKE_LCD_string((U8_t*)"RPM:");
               goToRowColumn(2,5);
               EKE_LCD_intNumASCII(actualRPM);
-              PWM1_EKE_duty(255);
+              PWM1_EKE_duty((PID_ctr.pwm_val*255)/360); //PID ALGORITHM
 
 
 	}
